@@ -17,6 +17,7 @@ use Mine\Exception\MineException;
 use Mine\Exception\NormalStatusException;
 use Mine\MineCollection;
 use Mine\MineModel;
+use Hyperf\Database\Model\Builder;
 
 /**
  * Class AbstractMapper.
