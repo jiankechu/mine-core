@@ -12,10 +12,19 @@ declare(strict_types=1);
 
 namespace Mine\Abstracts;
 
-use Hyperf\Context\Context;
+use Hyperf\Database\Model\Collection;
+use Hyperf\DbConnection\Db;
+use Hyperf\Tappable\HigherOrderTapProxy;
 use Mine\MineCollection;
 use Mine\MineModel;
 use Mine\MineResponse;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
+use Hyperf\Context\Context;
+
+use function Hyperf\Collection\collect;
 
 abstract class AbstractService
 {
