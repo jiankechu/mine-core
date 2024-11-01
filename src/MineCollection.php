@@ -43,26 +43,32 @@ class MineCollection extends Collection
 
     public function setRouter(&$menu): array
     {
-        $route = ($menu['type'] == 'L' || $menu['type'] == 'I') ? $menu['route'] : '/' . $menu['route'];
+        $route = ($menu['type'] == 'L' || $menu['type'] == 'I') ? $menu['route'] : '/'.$menu['route'];
         return [
-            'id' => $menu['id'],
+            'id'        => $menu['id'],
             'parent_id' => $menu['parent_id'],
-            'name' => $menu['code'],
+            'name'      => $menu['code'],
             'component' => $menu['component'],
-            'path' => $route,
-            'redirect' => $menu['redirect'],
-            'meta' => [
-                'type' => $menu['type'],
-                'icon' => $menu['icon'],
-                'title' => $menu['name'],
-                'hidden' => ($menu['is_hidden'] === 1),
+            'path'      => $route,
+            'redirect'  => $menu['redirect'],
+            'layout'    => $menu['layout'] ?? '',
+            'meta'      => [
+                'type'             => $menu['type'],
+                'icon'             => $menu['icon'],
+                'title'            => $menu['name'],
+                'hidden'           => ($menu['is_hidden'] === 1),
                 'hiddenBreadcrumb' => false,
             ],
         ];
     }
 
-    public function toTree(array $data = [], int $parentId = 0, string $id = 'id', string $parentField = 'parent_id', string $children = 'children'): array
-    {
+    public function toTree(
+        array $data = [],
+        int $parentId = 0,
+        string $id = 'id',
+        string $parentField = 'parent_id',
+        string $children = 'children'
+    ): array {
         $data = $data ?: $this->toArray();
 
         if (empty($data)) {
@@ -74,7 +80,7 @@ class MineCollection extends Collection
         foreach ($data as $value) {
             if ($value[$parentField] == $parentId) {
                 $child = $this->toTree($data, $value[$id], $id, $parentField, $children);
-                if (! empty($child)) {
+                if (!empty($child)) {
                     $value[$children] = $child;
                 }
                 array_push($tree, $value);
@@ -87,12 +93,17 @@ class MineCollection extends Collection
 
     /**
      * 导出数据.
+     *
      * @throws Exception
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function export(string $dto, string $filename, null|array|\Closure $closure = null, ?\Closure $callbackData = null): ResponseInterface
-    {
+    public function export(
+        string $dto,
+        string $filename,
+        null|array|\Closure $closure = null,
+        ?\Closure $callbackData = null
+    ): ResponseInterface {
         $excelDrive = config('mineadmin.excel_drive');
         if ($excelDrive === 'auto') {
             $excel = extension_loaded('xlswriter') ? new XlsWriter($dto) : new PhpOffice($dto);
@@ -104,6 +115,7 @@ class MineCollection extends Collection
 
     /**
      * 数据导入.
+     *
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
